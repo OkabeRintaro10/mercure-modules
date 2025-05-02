@@ -12,7 +12,6 @@ from pydicom.uid import generate_uid
 logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[logging.FileHandler("Anonymize.log")],
 )
 
 
