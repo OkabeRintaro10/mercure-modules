@@ -7,8 +7,8 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
-#ADD docker-entrypoint.sh ./
-ADD main.py ./
+ADD docker-entrypoint.sh ./
+ADD anonymizer.py ./
 ADD requirements.txt ./
 RUN chmod 777 ./docker-entrypoint.sh
 RUN pip install -r requirements.txt
