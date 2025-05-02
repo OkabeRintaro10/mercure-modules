@@ -27,8 +27,8 @@ def anonymize_image(file, in_folder, out_folder, series_uid, settings):
     ds.SOPInstanceUID = generate_uid()
     ds.SeriesNumber = ds.SeriesNumber + settings["series_offset"]
     ds.SeriesDescription = "Anonymized(" + ds.SeriesDescription + ")"
-    ds.PatientName = "Anonymized"
-    ds.BirthDate = "Anonymized"
+    ds.PatientsName = "Anonymized"
+    ds.PatientsBirthDate = "Anonymized"
     ds.save_as(dcm_file_out)
 
 
