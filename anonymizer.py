@@ -51,7 +51,7 @@ def main(args=sys.argv[1:]):
         with open(Path(in_folder) / "task.json", "r") as json_file:
             task = json.load(json_file)
     except Exception as e:
-        logging.error("Error: Task file task.json not found")
+        logging.error(f"Error: Task file task.json not found {e}")
         sys.exit(1)
 
     setting = {"series_offset": 1000}
