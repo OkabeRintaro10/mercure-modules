@@ -23,7 +23,7 @@ logging.basicConfig(
 def store_dicom_data(in_folder):
     try:
         connection = mysql.connector.connect(
-            host="localhost",
+            host="127.0.0.1",
             port=3306,
             user="root",
             password="root",
@@ -63,8 +63,8 @@ def anonymize_image(file, in_folder, out_folder, series_uid, settings):
     ds.SOPInstanceUID = generate_uid()
     ds.SeriesNumber = ds.SeriesNumber + 1000
     ds.SeriesDescription = "Anonymized(" + ds.SeriesDescription + ")"
-    ds.PatientsName = "Anonymized"
-    ds.PatientsBirthDate = "Anonymized"
+    ds.PatientName = "Anonymized"
+    ds.PatientBirthDate = "Anonymized"
     ds.save_as(dcm_file_out)
 
 
