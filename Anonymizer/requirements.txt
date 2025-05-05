@@ -1,3 +1,3 @@
-myql-connector-python
+mysql-connector-python
 pydicom
 python-dotenv
