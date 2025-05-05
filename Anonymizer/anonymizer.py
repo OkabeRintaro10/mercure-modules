@@ -97,7 +97,7 @@ def main(args=sys.argv[1:]):
 
     # Collecting all DICOM series for processing
     series = {}
-    for entry in os.scandir("/mnt/f/mercure/addons/vagrant/systemd/sampledata/case_3/"):
+    for entry in os.scandir(in_folder):
         if entry.name.endswith(".dcm") and not entry.is_dir():
             seriesString = entry.name.split("#", 1)[0]
             if seriesString not in series.keys():
@@ -108,11 +108,11 @@ def main(args=sys.argv[1:]):
     for item in series:
         series_uid = generate_uid()
         for image_filename in series[item]:
-            store_dicom_data("/mnt/f/mercure/addons/vagrant/systemd/sampledata/case_3")
+            store_dicom_data(in_folder)
             anonymize_image(
                 image_filename,
-                "/mnt/f/mercure/addons/vagrant/systemd/sampledata/case_3",
-                "Anonymizer/out",
+                in_folder,
+                out_folder,
                 series_uid,
                 setting,
             )
