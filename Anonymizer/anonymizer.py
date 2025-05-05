@@ -50,7 +50,7 @@ def store_dicom_data(in_folder):
     return
 
 
-def anonymize_image(file, in_folder, out_folder, series_uid):
+def anonymize_image(file, in_folder, out_folder, series_uid, settings):
     # I/O formating for mercure
     dcm_file_in = Path(in_folder) / file
     logging.info(f"Anonymizing {dcm_file_in}")
