@@ -9,10 +9,42 @@ import logging
 import pydicom
 from pydicom.uid import generate_uid
 
+import mysql.connector
+
 logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
+
+
+def store_dicom_data(in_folder):
+    try:
+        connection = mysql.connector.connect(
+            host="localhost",
+            port=3306,
+            user="your_username",
+            password="your_password",
+            database="your_database",
+        )
+        cursor = connection.cursor()
+        for entry in os.scandir(in_folder):
+            if entry.name.endswith(".dcm") and not entry.is_dir():
+                ds = pydicom.dcmread(Path(in_folder) / entry.name)
+                patient_name = ds.PatientsName
+                patient_id = ds.PatientID
+                series_uid = ds.SeriesInstanceUID
+                cursor.execute(
+                    "INSERT INTO dicom_data (patient_name, patient_id, series_uid) VALUES (%s, %s, %s)",
+                    (patient_name, patient_id, series_uid),
+                )
+        connection.commit()
+    except mysql.connector.Error as err:
+        logging.error(f"Error: {err}")
+    finally:
+        if "connection" in locals() and connection.is_connected():
+            cursor.close()
+            connection.close()
+    return
 
 
 def anonymize_image(file, in_folder, out_folder, series_uid, settings):
@@ -71,6 +103,7 @@ def main(args=sys.argv[1:]):
     for item in series:
         series_uid = generate_uid()
         for image_filename in series[item]:
+            store_dicom_data(in_folder)
             anonymize_image(image_filename, in_folder, out_folder, series_uid, setting)
 
 
