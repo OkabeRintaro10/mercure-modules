@@ -1,0 +1,13 @@
+[project]
+name = "anonymizer"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "mysql>=0.0.3",
+    "mysql-connector-python>=9.3.0",
+    "pydicom>=3.0.1",
+    "pynetdicom>=2.0.2",
+    "python-dotenv>=1.1.0",
+]

@@ -9,8 +9,11 @@ import logging
 import pydicom
 from pydicom.uid import generate_uid
 
-import mysql.connector
 
+import mysql.connector
+from dotenv import load_dotenv
+
+load_dotenv()
 logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -22,20 +25,20 @@ def store_dicom_data(in_folder):
         connection = mysql.connector.connect(
             host="localhost",
             port=3306,
-            user="your_username",
-            password="your_password",
-            database="your_database",
+            user="root",
+            password="root",
+            database="dicom_tag_test",
         )
         cursor = connection.cursor()
         for entry in os.scandir(in_folder):
             if entry.name.endswith(".dcm") and not entry.is_dir():
                 ds = pydicom.dcmread(Path(in_folder) / entry.name)
-                patient_name = ds.PatientsName
+                patient_name = ds.PatientName
                 patient_id = ds.PatientID
                 series_uid = ds.SeriesInstanceUID
                 cursor.execute(
                     "INSERT INTO dicom_data (patient_name, patient_id, series_uid) VALUES (%s, %s, %s)",
-                    (patient_name, patient_id, series_uid),
+                    (str(patient_name), int(patient_id), str(series_uid)),
                 )
         connection.commit()
     except mysql.connector.Error as err:
@@ -47,9 +50,10 @@ def store_dicom_data(in_folder):
     return
 
 
-def anonymize_image(file, in_folder, out_folder, series_uid, settings):
+def anonymize_image(file, in_folder, out_folder, series_uid):
     # I/O formating for mercure
     dcm_file_in = Path(in_folder) / file
+    logging.info(f"Anonymizing {dcm_file_in}")
     out_filename = series_uid + "#" + file.split("#", 1)[1]
     dcm_file_out = Path(out_folder) / out_filename
 
@@ -57,15 +61,16 @@ def anonymize_image(file, in_folder, out_folder, series_uid, settings):
     ds = pydicom.dcmread(dcm_file_in)
     ds.SeriesInstanceUID = series_uid
     ds.SOPInstanceUID = generate_uid()
-    ds.SeriesNumber = ds.SeriesNumber + settings["series_offset"]
+    ds.SeriesNumber = ds.SeriesNumber + 1000
     ds.SeriesDescription = "Anonymized(" + ds.SeriesDescription + ")"
     ds.PatientsName = "Anonymized"
     ds.PatientsBirthDate = "Anonymized"
     ds.save_as(dcm_file_out)
 
 
+#
 def main(args=sys.argv[1:]):
-    print("Anonymization Started")
+    logging.info("Starting Anonymizer")
 
     # Checking for conditions regarding the I/O buffer folder
     if len(sys.argv) < 3:
@@ -92,7 +97,7 @@ def main(args=sys.argv[1:]):
 
     # Collecting all DICOM series for processing
     series = {}
-    for entry in os.scandir(in_folder):
+    for entry in os.scandir("/mnt/f/mercure/addons/vagrant/systemd/sampledata/case_3/"):
         if entry.name.endswith(".dcm") and not entry.is_dir():
             seriesString = entry.name.split("#", 1)[0]
             if seriesString not in series.keys():
@@ -103,8 +108,14 @@ def main(args=sys.argv[1:]):
     for item in series:
         series_uid = generate_uid()
         for image_filename in series[item]:
-            store_dicom_data(in_folder)
-            anonymize_image(image_filename, in_folder, out_folder, series_uid, setting)
+            store_dicom_data("/mnt/f/mercure/addons/vagrant/systemd/sampledata/case_3")
+            anonymize_image(
+                image_filename,
+                "/mnt/f/mercure/addons/vagrant/systemd/sampledata/case_3",
+                "Anonymizer/out",
+                series_uid,
+                setting,
+            )
 
 
 if __name__ == "__main__":
