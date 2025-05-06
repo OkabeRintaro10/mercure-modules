@@ -37,4 +37,9 @@ def main(args=sys.argv[1:]):
         for image_filename in series[item]:
             files = {"image": open(os.path.join(in_folder, image_filename), "rb")}
             response = requests.post("http://10.0.2.2:8001/upload", files=files)
-            print(response.json())
+            if response.status_code == 200:
+                logging.info(f"Image {image_filename} uploaded successfully")
+            else:
+                logging.error(f"Failed to upload image {image_filename}")
+                logging.error(f"Response: {response.text}")
+    logging.info("ApiCaller finished")
