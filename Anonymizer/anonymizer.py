@@ -61,10 +61,9 @@ def anonymize_image(file, in_folder, out_folder, series_uid, settings):
     ds = pydicom.dcmread(dcm_file_in)
     ds.SeriesInstanceUID = series_uid
     ds.SOPInstanceUID = generate_uid()
-    ds.SeriesNumber = ds.SeriesNumber + 1000
+    ds.SeriesNumber = ds.SeriesNumber + settings["series_uid"]
     ds.SeriesDescription = "Anonymized(" + ds.SeriesDescription + ")"
     ds.PatientName = "Anonymized"
-    ds.PatientBirthDate = "Anonymized"
     ds.save_as(dcm_file_out)
 
 
