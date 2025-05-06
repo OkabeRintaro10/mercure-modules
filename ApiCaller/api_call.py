@@ -48,7 +48,7 @@ def main(args=sys.argv[1:]):
                 logging.error(f"Failed to upload image {image_filename}")
                 logging.error(f"Request failed: {e}")
             finally:
-                files["image"].close()
+                files["files"].close()
         logging.info("ApiCaller finished")
 
 
