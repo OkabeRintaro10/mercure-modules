@@ -23,7 +23,7 @@ logging.basicConfig(
 def store_dicom_data(in_folder):
     try:
         connection = mysql.connector.connect(
-            host="127.0.0.1",
+            host="172.17.0.2",
             port=3306,
             user="root",
             password="root",
