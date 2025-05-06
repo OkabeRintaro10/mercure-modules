@@ -12,10 +12,11 @@ logging.basicConfig(
 
 def main(args=sys.argv[1:]):
     logging.info("Starting ApiCaller")
+
     # Checking for conditions regarding the I/O buffer folder
     if len(sys.argv) < 3:
         logging.error("Missing Arguments!")
-        logging.info("Usage: ApiCaller [input-folder][output-folder]")
+        logging.info("Usage: Anonymizer [input-folder][output-folder]")
         sys.exit(1)
     in_folder = sys.argv[1]
     out_folder = sys.argv[2]
@@ -49,3 +50,7 @@ def main(args=sys.argv[1:]):
         #     finally:
         #         files["image"].close()
         # logging.info("ApiCaller finished")
+
+
+if __name__ == "__main__":
+    main()
