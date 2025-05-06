@@ -1,0 +1,6 @@
+pyproject.toml
+uv.lock
+test.py
+.venv
+__pycache__
+README.md
