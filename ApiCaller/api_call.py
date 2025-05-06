@@ -35,5 +35,6 @@ def main(args=sys.argv[1:]):
     # Anonymize each series found
     for item in series:
         for image_filename in series[item]:
-            response = requests.post("10.0.2.2:8001/upload")
+            files = {"image": open(image_filename, "rb")}
+            response = requests.post("10.0.2.2:8001/upload", files=files)
             print(response.json())
