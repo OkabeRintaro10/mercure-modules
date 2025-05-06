@@ -38,7 +38,7 @@ def main(args=sys.argv[1:]):
         # response = requests.get("http://10.0.2.2:8001/")
         # print(response.json())
         for image_filename in series[item]:
-            files = {"image": open(os.path.join(in_folder, image_filename), "rb")}
+            files = {"files": open(os.path.join(in_folder, image_filename), "rb")}
             try:
                 response = requests.post("http://10.0.2.2:8001/upload", files=files)
                 response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
